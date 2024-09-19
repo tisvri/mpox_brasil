@@ -9,6 +9,7 @@ import streamlit as st
 from datetime import datetime
 from sklearn.linear_model import LinearRegression
 from pathlib import Path
+import pytz
 
 # Layout da página
 st.set_page_config(
@@ -166,7 +167,7 @@ st.sidebar.markdown(multi)
 col1, col2, col3, col4 = st.columns(4)
 with col4:
     def get_last_update_time():
-        return datetime.now()
+        return datetime.now(tz=pytz.timezone('America/Sao_Paulo'))
 
     def format_datetime(dt):
         return dt.strftime('%d/%m/%Y %H:%M:%S')
