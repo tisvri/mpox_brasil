@@ -8,6 +8,7 @@ import numpy as np
 import streamlit as st
 from datetime import datetime
 from sklearn.linear_model import LinearRegression
+from pathlib import Path
 
 # Layout da página
 st.set_page_config(
@@ -30,7 +31,7 @@ def extract_tables_from_pdfs(directory_path, page_number):
             dataframes[table_name] = table
     return dataframes
 
-directory_path = r'C:\Users\Gleice Barros\OneDrive - svriglobal.com\Área de Trabalho\MPOX\Informes COE MPOX'
+directory_path = str(Path(__file__).parent) #######MODIFICAÇÃO
 page_number = 5
 dataframes = extract_tables_from_pdfs(directory_path, page_number)
 
