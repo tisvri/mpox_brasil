@@ -213,8 +213,7 @@ with col2:
     )
 
 with col3:
-        df_total = combined_df[combined_df['UF de Residência'] == 'Total'].sort_values(by='Source_File', ascending=True)
-
+    df_total = combined_df[combined_df['UF de Residência'] == 'Total'].sort_values(by='Source_File', ascending=True)
     if not df_total.empty:
         valor_primeira_semana = df_total['2024:Casos'].iloc[0]
         valor_ultima_semana = df_total['2024:Casos'].iloc[-1]
