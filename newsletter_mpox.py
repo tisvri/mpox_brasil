@@ -140,11 +140,14 @@ novas_linhas = pd.DataFrame({
 combined_df = pd.concat([novas_linhas, combined_df], ignore_index=True)
 
 combined_df = combined_df.astype({'2022:Casos': 'int16'})
+combined_df = combined_df.astype({'2023:Casos': 'int16'})
 combined_df = combined_df.astype({'2024:Casos': 'int16'})
 combined_df['Source_File'] = combined_df['Source_File'].astype(str)
+# combined_df = combined_df.sort_index()
+combined_df = combined_df.sort_values(by='Source_File')
+
+
 ########################## GERANDO MÉTRICAS PARA DEMONSTRAÇÃO E ATUALIZAÇÃO SEMANAL ##########################
-
-
 caminho_logo = 'Logo svri texto preto.png'
 st.sidebar.image(caminho_logo, use_column_width=True)
 
@@ -193,7 +196,10 @@ with col1:
 with col2:
     df_total = combined_df[combined_df['UF de Residência'] == 'Total']
     df_total['Aumento (%)'] = df_total['2024:Casos'].pct_change() * 100
-    aumento_ultima_semana = df_total['Aumento (%)'].iloc[-1] if not df_total.empty else 0
+    valor_semana_anterior = df_total['2024:Casos'].iloc[-2]
+    valor_ultima_semana = df_total['2024:Casos'].iloc[-1] 
+    aumento_ultima_semana = ((valor_ultima_semana - valor_semana_anterior) / valor_semana_anterior) * 100
+    # aumento_ultima_semana = df_total['Aumento (%)'].iloc[-1] if not df_total.empty else 0
     st.metric(
         label="Aumento(%) em relação a semana anterior",
         value=f"{aumento_ultima_semana:.2f}%",
@@ -204,7 +210,7 @@ df_total['2022:Óbitos'].fillna(0, inplace=True)
 df_total['Semana_Num'] = df_total['Source_File'].str.extract('(\d+)').astype(int)
 
 with col3:
-    df_total = combined_df[combined_df['UF de Residência'] == 'Total']
+    df_total = combined_df[combined_df['UF de Residência'] == 'Total'].sort_values(by='Source_File', ascending=True)
     if not df_total.empty:
         valor_primeira_semana = df_total['2024:Casos'].iloc[0]
         valor_ultima_semana = df_total['2024:Casos'].iloc[-1] 
@@ -218,7 +224,7 @@ with col3:
         delta=f"{aumento_percentual:.2f}%"
     )
 
-
+# st.write(df_total) 
 ########################## GERANDO OS GRAFICOS COM AS INFORMAÇÕES COLHIDAS ATÉ AQUI ##########################
 col4, col5 = st.columns(2)
 
@@ -232,6 +238,7 @@ with col5:
 
     for uf in df_filtrado['UF de Residência'].unique():
         df_subset = df_filtrado[df_filtrado['UF de Residência'] == uf]
+        df_subset = df_subset.sort_values(by='Source_File', ascending=True)
         fig.add_trace(go.Bar(
             x=df_subset['Source_File'],
             y=df_subset['2024:Casos'],
@@ -241,6 +248,7 @@ with col5:
             texttemplate='%{text}', 
             textposition='outside' 
         ))
+
 
     fig.update_layout(
         title= 'MPOX: 5 Estados x Casos Confirmados',
@@ -278,7 +286,7 @@ with col4:
 # Gráfico com a evolução dos numeros de casos semana a semana
 
 df_total['Semana_Num'] = df_total['Source_File'].str.extract(r'(\d+)').astype(int)
-
+df_total = df_total.sort_values(by='Source_File', ascending=True)
 fig2 = px.line(df_total, x='Source_File', y='2024:Casos', text='2024:Casos')
 fig2.update_traces(
     line=dict(color='#EC0E73', width=3), 
@@ -325,7 +333,7 @@ fig2.add_scatter(
     textposition='top center')
 
 st.plotly_chart(fig2)
-
+combined_df = combined_df.sort_values(by=combined_df.columns[0], ascending=True)  # ou False para ordem decrescente
 st.dataframe(combined_df)
 
 st.markdown("Fonte: Informes MPOX - https://www.gov.br/saude/pt-br/composicao/svsa/coes/mpox/informes")
