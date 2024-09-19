@@ -197,33 +197,44 @@ with col1:
 with col2:
     df_total = combined_df[combined_df['UF de Residência'] == 'Total']
     df_total['Aumento (%)'] = df_total['2024:Casos'].pct_change() * 100
+
+    # Obtendo os valores das semanas
     valor_semana_anterior = df_total['2024:Casos'].iloc[-2]
     valor_ultima_semana = df_total['2024:Casos'].iloc[-1] 
+
+    # Cálculo do aumento absoluto
+    aumento_absoluto = valor_ultima_semana - valor_semana_anterior
     aumento_ultima_semana = ((valor_ultima_semana - valor_semana_anterior) / valor_semana_anterior) * 100
-    # aumento_ultima_semana = df_total['Aumento (%)'].iloc[-1] if not df_total.empty else 0
+
     st.metric(
-        label="Aumento(%) em relação a semana anterior",
-        value=f"{aumento_ultima_semana:.2f}%",
-        delta=f"{aumento_ultima_semana:.2f}%"
+        label="Aumento de Casos",
+        value=f"{aumento_absoluto:.0f}",  # Número absoluto
+        delta=f"{aumento_ultima_semana:.2f}%"  # Porcentagem
     )
-df_total['2022:Óbitos'] = pd.to_numeric(df_total['2022:Óbitos'], errors='coerce')
-df_total['2022:Óbitos'].fillna(0, inplace=True)
-df_total['Semana_Num'] = df_total['Source_File'].str.extract('(\d+)').astype(int)
 
 with col3:
-    df_total = combined_df[combined_df['UF de Residência'] == 'Total'].sort_values(by='Source_File', ascending=True)
+        df_total = combined_df[combined_df['UF de Residência'] == 'Total'].sort_values(by='Source_File', ascending=True)
+
     if not df_total.empty:
         valor_primeira_semana = df_total['2024:Casos'].iloc[0]
-        valor_ultima_semana = df_total['2024:Casos'].iloc[-1] 
+        valor_ultima_semana = df_total['2024:Casos'].iloc[-1]
+        
+        # Cálculo do aumento absoluto
+        aumento_absoluto = valor_ultima_semana - valor_primeira_semana
+        
+        # Cálculo do aumento percentual
         aumento_percentual = ((valor_ultima_semana - valor_primeira_semana) / valor_primeira_semana) * 100
     else:
+        aumento_absoluto = 0
         aumento_percentual = 0
 
+    # Exibir o aumento absoluto no 'value' e a porcentagem no 'delta'
     st.metric(
-        label="Aumento (%) em relação à primeira semana",
-        value=f"{aumento_percentual:.2f}%",
-        delta=f"{aumento_percentual:.2f}%"
+        label="Aumento de Casos em relação à primeira semana",
+        value=f"{aumento_absoluto:.0f}",  # Número absoluto
+        delta=f"{aumento_percentual:.2f}%"  # Porcentagem
     )
+
 
 # st.write(df_total) 
 ########################## GERANDO OS GRAFICOS COM AS INFORMAÇÕES COLHIDAS ATÉ AQUI ##########################
@@ -322,7 +333,7 @@ df_futuro = pd.DataFrame({
     '2024:Casos': predicoes_futuras 
 })
 
-df_total = pd.concat([df_total, df_futuro], ignore_index=True)
+df_total = pd.concat([df_total, df_futuro], ignore_index=True).round(0)
 
 fig2.add_scatter(
     x=df_total['Source_File'], 
