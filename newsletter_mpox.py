@@ -324,7 +324,7 @@ y = df_total['2024:Casos'].values
 modelo = LinearRegression()
 modelo.fit(X, y)
 
-semanas_futuras = pd.DataFrame({'Semana_Num': [12, 13, 14,15]}) 
+semanas_futuras = pd.DataFrame({'Semana_Num': [13, 14,15]}) 
 predicoes_futuras = modelo.predict(semanas_futuras)
 
 df_futuro = pd.DataFrame({
