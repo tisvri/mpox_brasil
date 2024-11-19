@@ -382,11 +382,18 @@ with col6:
     noticias_combinadas = noticias_pt + noticias_en
 
     # Exibir notícias combinadas
+    # Exibir notícias combinadas
     if noticias_combinadas:
         for noticia in noticias_combinadas:
             with st.container():
-                st.subheader(noticia["title"])
+                 # Título e Data
+                st.subheader(f"{noticia['title']}")
+                st.write(f"*Publicado em: {formatar_data(noticia['publishedAt'])}*")
+                
+                # Descrição
                 st.write(noticia["description"] or "Descrição não disponível.")
+                
+                # Link para leitura
                 st.markdown(f"[Leia mais]({noticia['url']})")
                 st.write("---")
     else:
