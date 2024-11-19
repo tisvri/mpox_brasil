@@ -380,6 +380,11 @@ with col6:
 
     # Combinar notícias
     noticias_combinadas = noticias_pt + noticias_en
+    noticias_ordenadas = sorted(
+        noticias_combinadas,
+        key=lambda x: x["publishedAt"],
+        reverse=True  # Ordem decrescente (mais recente primeiro)
+    )
 
     # Exibir notícias combinadas
     # Exibir notícias combinadas
