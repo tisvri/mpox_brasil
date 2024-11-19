@@ -155,11 +155,7 @@ st.sidebar.image(caminho_logo, use_column_width=True)
 
 st.write("# Monitoramento de casos MPOX - Brasil")
 
-multi = '''Este informativo foi elaborado com o objetivo de acompanhamento analítico dos números confirmados de contágio por MPOX no Brasil. 
-Os dados são obtidos por meio dos Informes Semanais publicados pelo Ministério da Saúde (MS), através do Centro de Operações de Emergência para MPOX (COE/MPOX). O primeiro informe foi publicado em 20 de agosto de 2024, após decretação da Emergência de Saúde Pública de Importância Internacional (ESPII) pela Organização Mundial da Saúde (OMS) em 14 de agosto de 2024.
-
-Até o momento, não foram registrados óbitos e os casos confirmados no Brasil são do Clado 2B da doença, diferente do novo Clado (1b), responsável por maior parte dos casos recentes na região central do Continente Africano.
-
+multi = '''Este informativo foi elaborado com o objetivo de acompanhamento analítico dos números confirmados de contágio por MPOX no Brasil. Os dados são obtidos por meio dos Informes Semanais publicados pelo Ministério da Saúde (MS), através do Centro de Operações de Emergência para MPOX (COE/MPOX). O primeiro informe foi publicado em 20 de agosto de 2024, após decretação da Emergência de Saúde Pública de Importância Internacional (ESPII) pela Organização Mundial da Saúde (OMS) em 14 de agosto de 2024. Até o momento, não foram registrados óbitos e os casos confirmados no Brasil são do Clado 2B da doença, diferente do novo Clado (1b), responsável por maior parte dos casos recentes na região central do Continente Africano.
 Vale ressaltar ainda: os dados da Semana 01 - 20.ago são os números acumulados desde o inicio do ano de 2024, computados pelo MS.
 '''
 st.markdown(multi)
@@ -352,12 +348,11 @@ with col6:
 
     st.title("Últimas Notícias")
     temas = ["MPOX", "monkeypox", "Bavarian Nordic", "vacina mpox"]
-    api_key = "b31b398b875d47788946a8e312f09a7b"  # Substitua pela sua chave da NewsAPI
-    quantidade_por_tema = 5  # Quantidade total de notícias
+    api_key = "b31b398b875d47788946a8e312f09a7b"
+    quantidade_por_tema = 5  
 
-    # Função para buscar notícias
     def buscar_noticias(temas, lingua, quantidade):
-        query = " OR ".join(temas)  # Junta os temas com "OR"
+        query = " OR ".join(temas)
         url = f"https://newsapi.org/v2/everything?q={query}&language={lingua}&sortBy=publishedAt&pageSize={quantidade}&apiKey={api_key}"
         response = requests.get(url)
         if response.status_code == 200:
@@ -374,7 +369,6 @@ with col6:
         except ValueError:
             return "Data inválida"
             
-    # Buscar notícias em português e inglês
     noticias_pt = buscar_noticias(temas, "pt", quantidade_por_tema)
     noticias_en = buscar_noticias(temas, "en", quantidade_por_tema)
 
@@ -383,11 +377,9 @@ with col6:
     noticias_ordenadas = sorted(
         noticias_combinadas,
         key=lambda x: x["publishedAt"],
-        reverse=True  # Ordem decrescente (mais recente primeiro)
+        reverse=True 
     )
 
-    # Exibir notícias combinadas
-    # Exibir notícias combinadas
     if noticias_combinadas:
         for noticia in noticias_combinadas:
             with st.container():
@@ -413,4 +405,4 @@ with col7:
 
 st.markdown("Fonte: Informes MPOX - https://www.gov.br/saude/pt-br/composicao/svsa/coes/mpox/informes")
 
-st.markdown("Desenvolvido por [Science Valley Research Institute](https://svriglobal.com/)")
+st.sidebar.markdown("Desenvolvido por [Science Valley Research Institute](https://svriglobal.com/)")
