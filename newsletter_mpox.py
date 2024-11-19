@@ -10,6 +10,7 @@ from datetime import datetime
 from sklearn.linear_model import LinearRegression
 from pathlib import Path
 import pytz
+import requests
 
 # Layout da página
 st.set_page_config(
@@ -161,7 +162,7 @@ Até o momento, não foram registrados óbitos e os casos confirmados no Brasil 
 
 Vale ressaltar ainda: os dados da Semana 01 - 20.ago são os números acumulados desde o inicio do ano de 2024, computados pelo MS.
 '''
-st.sidebar.markdown(multi)
+st.markdown(multi)
 
 
 col1, col2, col3, col4 = st.columns(4)
@@ -344,9 +345,60 @@ fig2.add_scatter(
     textposition='top center')
 
 st.plotly_chart(fig2)
-combined_df = combined_df.sort_values(by=combined_df.columns[0], ascending=True)  # ou False para ordem decrescente
-st.dataframe(combined_df)
+
+col6, col7 = st.columns(2)
+with col6:
+    ########################## BUSCA DE NOTICIAS ATUAIS SOBRE O TEMA ##########################
+
+    st.title("Últimas Notícias")
+    temas = ["MPOX", "monkeypox", "Bavarian Nordic", "vacina mpox"]
+    api_key = "b31b398b875d47788946a8e312f09a7b"  # Substitua pela sua chave da NewsAPI
+    quantidade_por_tema = 5  # Quantidade total de notícias
+
+    # Função para buscar notícias
+    def buscar_noticias(temas, lingua, quantidade):
+        query = " OR ".join(temas)  # Junta os temas com "OR"
+        url = f"https://newsapi.org/v2/everything?q={query}&language={lingua}&sortBy=publishedAt&pageSize={quantidade}&apiKey={api_key}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json().get("articles", [])
+        else:
+            st.error(f"Erro {response.status_code}: {response.json().get('message')}")
+            return []
+
+    # Formatar data de publicação
+    def formatar_data(data_iso):
+        try:
+            data = datetime.fromisoformat(data_iso.replace("Z", "+00:00"))
+            return data.strftime("%d/%m/%Y %H:%M")
+        except ValueError:
+            return "Data inválida"
+            
+    # Buscar notícias em português e inglês
+    noticias_pt = buscar_noticias(temas, "pt", quantidade_por_tema)
+    noticias_en = buscar_noticias(temas, "en", quantidade_por_tema)
+
+    # Combinar notícias
+    noticias_combinadas = noticias_pt + noticias_en
+
+    # Exibir notícias combinadas
+    if noticias_combinadas:
+        for noticia in noticias_combinadas:
+            with st.container():
+                st.subheader(noticia["title"])
+                st.write(noticia["description"] or "Descrição não disponível.")
+                st.markdown(f"[Leia mais]({noticia['url']})")
+                st.write("---")
+    else:
+        st.write("Nenhuma notícia encontrada.")
+
+with col7:
+    st.title("Tabela de Casos: Informes Ministério da Saúde")
+    combined_df = combined_df.sort_values(by=combined_df.columns[0], ascending=True)  # ou False para ordem decrescente
+    st.dataframe(combined_df)
+
+
 
 st.markdown("Fonte: Informes MPOX - https://www.gov.br/saude/pt-br/composicao/svsa/coes/mpox/informes")
 
-st.sidebar.markdown("Desenvolvido por [Science Valley Research Institute](https://svriglobal.com/)")
+st.markdown("Desenvolvido por [Science Valley Research Institute](https://svriglobal.com/)")
