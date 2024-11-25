@@ -153,7 +153,7 @@ combined_df = combined_df.sort_values(by='Source_File')
 caminho_logo = 'Logo svri texto preto.png'
 st.sidebar.image(caminho_logo, use_column_width=True)
 
-st.write("# Monitoramento de casos MPOX - Brasil")
+st.write("# Monitoramento: Casos de MPOX no Brasil")
 
 multi = '''Este informativo foi elaborado com o objetivo de acompanhamento analítico dos números confirmados de contágio por MPOX no Brasil. Os dados são obtidos por meio dos Informes Semanais publicados pelo Ministério da Saúde (MS), através do Centro de Operações de Emergência para MPOX (COE/MPOX). O primeiro informe foi publicado em 20 de agosto de 2024, após decretação da Emergência de Saúde Pública de Importância Internacional (ESPII) pela Organização Mundial da Saúde (OMS) em 14 de agosto de 2024. Até o momento, não foram registrados óbitos e os casos confirmados no Brasil são do Clado 2B da doença, diferente do novo Clado (1b), responsável por maior parte dos casos recentes na região central do Continente Africano.
 Vale ressaltar ainda: os dados da Semana 01 - 20.ago são os números acumulados desde o inicio do ano de 2024, computados pelo MS.
