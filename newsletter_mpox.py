@@ -263,7 +263,7 @@ with col5:
         xaxis_title='',
         yaxis_title='Número de Casos',
         barmode='group',
-        yaxis=dict(range=[0, 700])
+        yaxis=dict(range=[0, 1000])
     )
 
     st.plotly_chart(fig)
@@ -288,7 +288,7 @@ with col4:
         legend_title='ANO',
     )
 
-    fig1.update_yaxes(range=[0, 11000])
+    fig1.update_yaxes(range=[0, 12000])
     st.plotly_chart(fig1)
 
 # Gráfico com a evolução dos numeros de casos semana a semana
