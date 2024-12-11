@@ -151,7 +151,7 @@ combined_df = combined_df.sort_values(by='Source_File')
 
 ########################## GERANDO MÉTRICAS PARA DEMONSTRAÇÃO E ATUALIZAÇÃO SEMANAL ##########################
 caminho_logo = 'Logo svri texto preto.png'
-st.sidebar.image(caminho_logo, use_column_width=True)
+st.sidebar.image(caminho_logo, use_container_width=True)
 
 st.write("# Monitoramento: Casos de MPOX no Brasil")
 
